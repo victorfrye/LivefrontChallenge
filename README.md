@@ -20,9 +20,9 @@ This repository contains my solution to a coding challenge by Livefront. The cha
     - [x] Add operation descriptions
     - [x] Add model field descriptions
 - [ ] Add unit tests
-- [ ] Add format workflow to pipeline
-- [ ] Add build workflow to pipeline
-- [ ] Add test workflow to pipeline
+- [x] Add format workflow to pipeline
+- [x] Add build workflow to pipeline
+- [x] Add test workflow to pipeline
 - [ ] Add README documentation
     - [ ] Write API Specification details
     - [ ] Write how to run details

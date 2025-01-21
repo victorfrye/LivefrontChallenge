@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CartonCaps.ReferralsApi.WebApi.Models;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace CartonCaps.ReferralsApi.WebApi;
 
-public static class SeedExtensions
+public static class DbSeed
 {
     private static readonly Guid JennyReferralGuid = Guid.Parse("01948986-41e1-7412-85c9-790850ef1d9e");
     private static readonly Guid JennyRefereeGuid = Guid.Parse("01948986-687c-7532-8f82-4b4c1134db3d");

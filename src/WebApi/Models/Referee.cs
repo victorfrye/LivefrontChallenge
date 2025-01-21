@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace CartonCaps.ReferralsApi.WebApi;
+namespace CartonCaps.ReferralsApi.WebApi.Models;
 
 [Description("The individual who was referred.")]
 public class Referee

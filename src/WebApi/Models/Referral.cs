@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace CartonCaps.ReferralsApi.WebApi;
+namespace CartonCaps.ReferralsApi.WebApi.Models;
 
 [Description("The principal object representing a referral from a referrer to a referee.")]
 public class Referral : IValidatableObject

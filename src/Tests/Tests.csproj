@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AppHost\AppHost.csproj" />
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

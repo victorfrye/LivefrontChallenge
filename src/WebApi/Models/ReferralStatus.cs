@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace CartonCaps.ReferralsApi.WebApi;
+namespace CartonCaps.ReferralsApi.WebApi.Models;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
 [Description("The current status of the referral. The default value is 'Pending'.")]

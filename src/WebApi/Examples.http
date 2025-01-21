@@ -2,11 +2,11 @@
 
 ### Get liveness
 GET {{WebApi_HostAddress}}/alive
-Accept: text/plain
+Accept: application/json
 
 ### Get health
 GET {{WebApi_HostAddress}}/health
-Accept: text/plain
+Accept: application/json
 
 ### Get OpenAPI document
 GET {{WebApi_HostAddress}}/openapi/v1.json

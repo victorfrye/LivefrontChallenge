@@ -47,7 +47,7 @@ public static class ReferralEndpoints
             return referral is null ? Results.NotFound() : Results.Ok(referral);
         })
         .WithName("RetrieveReferralById")
-        .WithSummary("Retrieve a referral by its ID.")
+        .WithSummary("Retrieve a referral by ID.")
         .WithDescription("This GET method retrieves an existing referral specified by the referral ID in the path. If no existing referral is found, a 404 response is returned.")
         .Produces<Referral>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
@@ -95,7 +95,7 @@ public static class ReferralEndpoints
             return Results.Accepted($"/referrals/{referral.Id}", referral);
         })
         .WithName("UpdateReferralStatus")
-        .WithSummary("Update the status of a referral.")
+        .WithSummary("Update the status of a referral by ID.")
         .WithDescription("This PATCH method updates the status of an existing referral specified by the referral ID in the path. The request body must include the new status as a string for the referral. If no existing referral is found, a 404 response is returned.")
         .Produces<Referral>(StatusCodes.Status202Accepted)
         .Produces(StatusCodes.Status404NotFound);

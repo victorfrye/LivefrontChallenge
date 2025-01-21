@@ -1,0 +1,114 @@
+@WebApi_HostAddress = https://localhost:7258
+
+### Get liveness
+GET {{WebApi_HostAddress}}/alive
+Accept: text/plain
+
+### Get health
+GET {{WebApi_HostAddress}}/health
+Accept: text/plain
+
+### Get OpenAPI document
+GET {{WebApi_HostAddress}}/openapi/v1.json
+
+### Get all referrals from XY7G4D
+GET {{WebApi_HostAddress}}/referrals?code=XY7G4D
+Accept: application/json
+
+### Invalid create
+POST {{WebApi_HostAddress}}/referrals
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "ABC123",
+  "referee": {
+    "firstName": "Will",
+    "lastName": "Nothwerk",
+    "phone": "abcde",
+    "email": "wnothwerk"
+  }
+}
+
+### Create referral
+POST {{WebApi_HostAddress}}/referrals
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "ABC123",
+  "referee": {
+    "firstName": "Alex",
+    "lastName": "Miller",
+    "phone": "+16161234567",
+    "email": "amiller@cartoncaps.com"
+  }
+}
+
+### Get new referral
+GET {{WebApi_HostAddress}}/referrals?code=ABC123
+Accept: application/json
+
+### Get pending referrals
+GET {{WebApi_HostAddress}}/referrals?code=XY7G4D&status=Pending
+Accept: application/json
+
+### Complete Helen referral
+PATCH {{WebApi_HostAddress}}/referrals/01948987-0ddc-7591-9750-74604d5b3c28/status
+Accept: application/json
+Content-Type: application/json
+
+"Complete"
+
+### Get Helen referral by ID
+GET {{WebApi_HostAddress}}/referrals/01948987-0ddc-7591-9750-74604d5b3c28
+Accept: application/json
+
+### Put invalid referral
+PUT {{WebApi_HostAddress}}/referrals/01948987-424d-7f68-b1d5-9c43a2541e9a
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "ABC123",
+  "referee": {
+    "firstName": "Jason",
+    "lastName": "Brosef",
+    "phone": "abcdef",
+    "email": "jbrosef"
+  },
+  "status": "Complete"
+}
+
+### Put Jason referral
+PUT {{WebApi_HostAddress}}/referrals/01948987-424d-7f68-b1d5-9c43a2541e9a
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "ABC123",
+  "referee": {
+    "firstName": "Jason",
+    "lastName": "Brosef"
+  },
+  "status": "Complete"
+}
+
+
+### Put Jason referral again
+PUT {{WebApi_HostAddress}}/referrals/01948987-424d-7f68-b1d5-9c43a2541e9a
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "ABC123",
+  "referee": {
+    "firstName": "Jason",
+    "lastName": "Brosef",
+    "phone": "+16161234568",
+    "email": "jbrosef@cartoncaps.com"
+  },
+  "status": "Complete"
+}
+
+###

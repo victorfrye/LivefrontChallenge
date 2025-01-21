@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CartonCaps.ReferralsApi.WebApi;
@@ -11,6 +13,7 @@ public static class ReferralEndpoints
         app.MapGetReferralByIdEndpoint();
         app.MapPostReferralEndpoint();
         app.MapPatchReferralStatusEndpoint();
+        app.MapPutReferralEndpoint();
     }
 
     private static void MapGetReferralsEndpoint(this WebApplication app)
@@ -44,7 +47,7 @@ public static class ReferralEndpoints
             return referral is null ? Results.NotFound() : Results.Ok(referral);
         })
         .WithName("RetrieveReferralById")
-        .WithSummary("Retrieve a given referral by its ID.")
+        .WithSummary("Retrieve a referral by its ID.")
         .WithDescription("This GET method retrieves an existing referral specified by the referral ID in the path. If no existing referral is found, a 404 response is returned.")
         .Produces<Referral>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status404NotFound);
@@ -54,6 +57,15 @@ public static class ReferralEndpoints
     {
         app.MapPost("/referrals", async (ReferralDbContext db, Referral referral, CancellationToken cancellationToken) =>
         {
+            var results = referral.Validate(new ValidationContext(referral));
+
+            if (results.Any())
+            {
+                return Results.ValidationProblem(results.ToDictionary(
+                    static result => result.MemberNames.FirstOrDefault() ?? string.Empty,
+                    static result => new string[] { result.ErrorMessage ?? string.Empty }));
+            }
+
             db.Referrals.Add(referral);
             await db.SaveChangesAsync(cancellationToken);
             return Results.Created($"/referrals/{referral.Id}", referral);
@@ -80,12 +92,49 @@ public static class ReferralEndpoints
             referral.Status = status;
             await db.SaveChangesAsync(cancellationToken);
 
-            return Results.Ok(referral);
+            return Results.Accepted($"/referrals/{referral.Id}", referral);
         })
         .WithName("UpdateReferralStatus")
-        .WithSummary("Update the status of a given referral.")
+        .WithSummary("Update the status of a referral.")
         .WithDescription("This PATCH method updates the status of an existing referral specified by the referral ID in the path. The request body must include the new status as a string for the referral. If no existing referral is found, a 404 response is returned.")
-        .Produces<Referral>(StatusCodes.Status200OK)
+        .Produces<Referral>(StatusCodes.Status202Accepted)
         .Produces(StatusCodes.Status404NotFound);
+    }
+
+    private static void MapPutReferralEndpoint(this WebApplication app)
+    {
+        app.MapPut("/referrals/{id:guid}", async (ReferralDbContext db, Guid id, [FromBody] Referral referral, CancellationToken cancellationToken) =>
+        {
+            var existingReferral = await db.Referrals
+                .Include(r => r.Referee)
+                .FirstOrDefaultAsync(r => r.Id == id, cancellationToken: cancellationToken);
+
+            referral.Id = id;
+
+            if (existingReferral is null)
+            {
+                var results = referral.Validate(new ValidationContext(referral));
+
+                if (results.Any())
+                {
+                    return Results.ValidationProblem(results.ToDictionary(
+                        static result => result.MemberNames.FirstOrDefault() ?? string.Empty,
+                        static result => new string[] { result.ErrorMessage ?? string.Empty }));
+                }
+
+                db.Add(referral);
+                return Results.Created($"/referrals/{referral.Id}", referral);
+            }
+
+            existingReferral = referral;
+
+            await db.SaveChangesAsync(cancellationToken);
+            return Results.Accepted($"/referrals/{referral.Id}", referral);
+        })
+        .WithName("UpdateReferral")
+        .WithSummary("Create or update a referral by ID.")
+        .WithDescription("This PUT method updates a referral specified by the referral ID in the path. The request body must include the full updated information for the referral. This operation will accept and override the existing referral with the new information. If no matching referral exists, it will be created with the provided information.")
+        .Produces<Referral>(StatusCodes.Status201Created)
+        .Produces<Referral>(StatusCodes.Status202Accepted);
     }
 }

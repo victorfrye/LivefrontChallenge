@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using CartonCaps.ReferralsApi.WebApi;
 
 using Microsoft.OpenApi.Models;
@@ -15,14 +17,21 @@ builder.AddSqlServerDbContext<ReferralDbContext>(connectionName: "db",
 );
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+        options.JsonSerializerOptions.AllowTrailingCommas = true;
+    });
+
+
 builder.Services.AddOpenApi(options =>
 {
     options.AddDocumentTransformer(static (document, _, _) =>
     {
         document.Info = new()
         {
-            Title = "Referrals API",
+            Title = "Carton Caps Referrals API",
             Version = "v1",
             Description = "Web API for managing referrals."
         };

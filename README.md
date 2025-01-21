@@ -13,12 +13,12 @@ This repository contains my solution to a coding challenge by Livefront. The cha
 - [x] Create retrieve single endpoint
 - [x] Create create endpoint
 - [x] Create update status endpoint
-- [ ] Add OpenAPI documentation
+- [x] Add OpenAPI documentation
     - [x] Add documentation base information
     - [x] Add operation response types
     - [x] Add operation summaries
     - [x] Add operation descriptions
-    - [ ] Add model field descriptions
+    - [x] Add model field descriptions
 - [ ] Add unit tests
 - [ ] Add format workflow to pipeline
 - [ ] Add build workflow to pipeline

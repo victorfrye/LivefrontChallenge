@@ -4,14 +4,14 @@ namespace CartonCaps.ReferralsApi.WebApi;
 
 public static class SeedExtensions
 {
-    private static readonly Guid JennyReferralGuid = Guid.Parse("019484a6-2d26-773a-a3cd-f73f90f25444");
-    private static readonly Guid JennyRefereeGuid = Guid.Parse("019484a6-2d26-773a-a3cd-f73f90f25445");
+    private static readonly Guid JennyReferralGuid = Guid.Parse("01948986-41e1-7412-85c9-790850ef1d9e");
+    private static readonly Guid JennyRefereeGuid = Guid.Parse("01948986-687c-7532-8f82-4b4c1134db3d");
 
-    private static readonly Guid ArcherReferralGuid = Guid.Parse("019484a6-2d26-773a-a3cd-f73f90f25446");
-    private static readonly Guid ArcherRefereeGuid = Guid.Parse("019484a6-2d26-773a-a3cd-f73f90f25447");
+    private static readonly Guid ArcherReferralGuid = Guid.Parse("01948986-814b-7dc7-be3b-1542b8650112");
+    private static readonly Guid ArcherRefereeGuid = Guid.Parse("01948986-f2b5-775f-b50f-ac0a7c9ffb4a");
 
-    private static readonly Guid HelenReferralGuid = Guid.Parse("019484a6-2d26-773a-a3cd-f73f90f25448");
-    private static readonly Guid HelenRefereeGuid = Guid.Parse("019484a6-34ed-7e01-8042-2eb91e85ace9");
+    private static readonly Guid HelenReferralGuid = Guid.Parse("01948987-0ddc-7591-9750-74604d5b3c28");
+    private static readonly Guid HelenRefereeGuid = Guid.Parse("01948987-1ffb-7ab6-ab76-32d4eef94e3b");
 
     private static readonly string ReferralCode = "XY7G4D";
 

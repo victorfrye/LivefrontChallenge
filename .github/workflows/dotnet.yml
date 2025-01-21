@@ -22,10 +22,13 @@ jobs:
       run: dotnet format --verify-no-changes --verbosity normal
 
     - name: Restore dependencies
-      run: dotnet restore --verbosity normal
+      run: dotnet restore
 
-    - name: Build
-      run: dotnet build --no-restore --verbosity normal
+    - name: Build solution
+      run: dotnet build --no-restore
 
-    - name: Test
+    - name: Trust development certificate
+      run: dotnet dev-certs https --trust
+
+    - name: Test API integrations
       run: dotnet test --no-build --verbosity normal

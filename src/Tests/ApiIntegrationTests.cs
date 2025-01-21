@@ -12,7 +12,7 @@ namespace CartonCaps.ReferralsApi.Tests;
 
 public class ApiIntegrationTests : IAsyncLifetime
 {
-    private DistributedApplication _app;
+    private DistributedApplication _app = null!;
 
     public async Task InitializeAsync()
     {
@@ -24,12 +24,13 @@ public class ApiIntegrationTests : IAsyncLifetime
 
     public async Task DisposeAsync() => await _app.DisposeAsync();
 
+    // MARK: Health Checks
+
     [Fact]
     public async Task GetApiLivenessReturnsOkStatusCode()
     {
         // Arrange
         var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
-        //await _app.StartAsync();
 
         // Act
         var httpClient = _app.CreateHttpClient("api");
@@ -45,7 +46,6 @@ public class ApiIntegrationTests : IAsyncLifetime
     {
         // Arrange
         var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
-        //await _app.StartAsync();
 
         // Act
         var httpClient = _app.CreateHttpClient("api");
@@ -55,6 +55,8 @@ public class ApiIntegrationTests : IAsyncLifetime
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    // MARK: OpenAPI Document
 
     [Fact]
     public async Task GetApiOpenApiDocumentReturnsOkResult()
@@ -98,6 +100,8 @@ public class ApiIntegrationTests : IAsyncLifetime
         Assert.Contains(referralStatusPath.Operations, o => o.Key == OperationType.Patch);
     }
 
+    // MARK: GET /referrals
+
     [Fact]
     public async Task GetJaneDoeReferralsReturnsOkResult()
     {
@@ -137,6 +141,8 @@ public class ApiIntegrationTests : IAsyncLifetime
         Assert.All(result, r => Assert.Equal(ReferralStatus.Complete, r.Status));
     }
 
+    // MARK: GET /referrals/{id}
+
     [Fact]
     public async Task GetArcherKingReferralByIdReturnsOkResult()
     {
@@ -157,6 +163,23 @@ public class ApiIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task GetNotExistingReferralByIdReturnsNotFoundResult()
+    {
+        // Arrange
+        var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
+
+        // Act
+        var httpClient = _app.CreateHttpClient("api");
+        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        var response = await httpClient.GetAsync("/referrals/01948b2d-3808-7cfc-97b2-1aa833f459a5");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    // MARK: POST /referrals
+
+    [Fact]
     public async Task CreateAlexMillerReferralReturnsCreatedStatus()
     {
         // Arrange
@@ -167,6 +190,8 @@ public class ApiIntegrationTests : IAsyncLifetime
             {
                 FirstName = "Alex",
                 LastName = "Miller",
+                Phone = "+16167061234",
+                Email = "amiller@cartoncaps.com"
             }
         };
 
@@ -233,8 +258,10 @@ public class ApiIntegrationTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
+    // MARK: PATCH /referrals/{id}/status
+
     [Fact]
-    public async Task UpdateReferralStatusReturnsAcceptedStatus()
+    public async Task UpdateHelenYangReferralStatusReturnsAcceptedStatus()
     {
         // Arrange
         var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
@@ -249,6 +276,23 @@ public class ApiIntegrationTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task UpdateNotExistingReferralStatusReturnsNotFoundStatus()
+    {
+        // Arrange
+        var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
+
+        // Act
+        var httpClient = _app.CreateHttpClient("api");
+        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        var response = await httpClient.PatchAsJsonAsync("/referrals/01948b2b-fb14-74be-bbdb-9cdcaac7cf04/status", ReferralStatus.Complete);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    // MARK: PUT /referrals/{id}
+
+    [Fact]
     public async Task PutMarkJohnsonReferralReturnsCreatedOrAcceptedStatus()
     {
         // Arrange
@@ -259,6 +303,8 @@ public class ApiIntegrationTests : IAsyncLifetime
             {
                 FirstName = "Mark",
                 LastName = "Johnson",
+                Phone = "+1 (616) 706-1234",
+                Email = "mjohnson@cartoncaps.com"
             }
         };
 
@@ -272,5 +318,57 @@ public class ApiIntegrationTests : IAsyncLifetime
         // Assert
         var expectedStatusCodes = new HashSet<HttpStatusCode>() { HttpStatusCode.Created, HttpStatusCode.Accepted };
         Assert.Contains(response.StatusCode, expectedStatusCodes);
+    }
+
+    [Fact]
+    public async Task PutReferralWithBadEmailReturnsBadRequestStatus()
+    {
+        // Arrange
+        var badReferral = new Referral()
+        {
+            Code = "ABC123",
+            Referee = new Referee()
+            {
+                FirstName = "Mark",
+                LastName = "Johnson",
+                Email = "bad email"
+            }
+        };
+
+        var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
+
+        // Act
+        var httpClient = _app.CreateHttpClient("api");
+        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        var response = await httpClient.PutAsJsonAsync($"/referrals/01948b2a-d04b-7cef-94a6-a8f385b1afc5", badReferral);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PutReferralWithBadPhoneReturnsBadRequestStatus()
+    {
+        // Arrange
+        var badReferral = new Referral()
+        {
+            Code = "ABC123",
+            Referee = new Referee()
+            {
+                FirstName = "Mark",
+                LastName = "Johnson",
+                Phone = "bad phone"
+            }
+        };
+
+        var resourceNotificationService = _app.Services.GetRequiredService<ResourceNotificationService>();
+
+        // Act
+        var httpClient = _app.CreateHttpClient("api");
+        await resourceNotificationService.WaitForResourceAsync("api", KnownResourceStates.Running).WaitAsync(TimeSpan.FromSeconds(30));
+        var response = await httpClient.PutAsJsonAsync($"/referrals/01948b2a-b972-70d3-98a3-1c8d80760b7c", badReferral);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

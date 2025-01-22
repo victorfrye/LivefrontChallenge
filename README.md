@@ -19,17 +19,17 @@ My solution for this challenge includes:
 ## Table of Contents
 
 - [Get Started](#get-started)
-    - [Prerequisites](#prerequisites) 
-    - [.NET Aspire](#net-aspire)
-    - [HTTPS](#https)
-    - [Run the app](#run-the-app)
-    - [Seed data](#seed-data)
+  - [Prerequisites](#prerequisites)
+  - [.NET Aspire](#net-aspire)
+  - [HTTPS](#https)
+  - [Run the app](#run-the-app)
+  - [Seed data](#seed-data)
 - [API Specification](#api-specification)
-    - [Endpoints](#endpoints)
-    - [Scenario considerations](#scenario-considerations)
+  - [Endpoints](#endpoints)
+  - [Scenario considerations](#scenario-considerations)
 - [Helpful Links](#helpful-links)
 
-## ✅ Get Started
+## Get Started
 
 ### Prerequisites
 
@@ -109,9 +109,9 @@ These three referrals will be created and can be retrieved by calling the `GET /
 ]
 ```
 
-## 📃 API Specification
+## API Specification
 
-The API specification for this project is generated at runtime using OpenAPI 3.0 and RESTful design. The most up-to-date document can be found at the endpoint `/openapi/v1.json`. Additionally, a copy of this document is included in the repository [here](/docs/openapi.json).
+The API specification for this project is generated at runtime using OpenAPI 3.0 and RESTful design. The most up-to-date document can be found at the endpoint `/openapi/v1.json`. Additionally, a copy of this document is included in the repository [here](./openapi.json).
 
 ### Endpoints
 
@@ -175,6 +175,6 @@ Given the vast myriad of ways to handle this, no specific implementation is incl
 
 ## Helpful Links
 
-- [Referrals OpenAPI Document](./docs/openapi.json)
+- [Referrals OpenAPI Document](./openapi.json)
 - [.NET Aspire documentation](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [Example Requests](./src/WebApi/Examples.http)

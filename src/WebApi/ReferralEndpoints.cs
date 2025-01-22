@@ -7,15 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CartonCaps.ReferralsApi.WebApi;
 
-public static class ReferralEndpoints
+internal static class ReferralEndpoints
 {
-    public static void MapReferralEndpoints(this WebApplication app)
+    internal static void MapReferralEndpoints(this WebApplication app)
     {
         app.MapGetReferralsEndpoint();
         app.MapGetReferralByIdEndpoint();
         app.MapPostReferralEndpoint();
         app.MapPatchReferralStatusEndpoint();
-        app.MapPutReferralEndpoint();
+        app.MapPutReferralByIdEndpoint();
     }
 
     private static void MapGetReferralsEndpoint(this WebApplication app)
@@ -33,7 +33,7 @@ public static class ReferralEndpoints
 
             return Results.Ok(await query.ToListAsync(cancellationToken: cancellationToken));
         })
-        .WithName("RetrieveReferrals")
+        .WithName("GetReferrals")
         .WithSummary("Retrieve a collection of referrals.")
         .WithDescription("This GET method retrieves a collection of referrals based on query parameters. The 'code' parameter is required and filters referrals with the referrer's code. The 'status' parameter is optional and can be appended to filter referrals of a given status.");
     }
@@ -48,7 +48,7 @@ public static class ReferralEndpoints
 
             return referral is null ? Results.NotFound() : Results.Ok(referral);
         })
-        .WithName("RetrieveReferralById")
+        .WithName("GetReferralById")
         .WithSummary("Retrieve a referral by ID.")
         .WithDescription("This GET method retrieves an existing referral specified by the referral ID in the path. If no existing referral is found, a 404 response is returned.")
         .Produces<Referral>(StatusCodes.Status200OK)
@@ -72,7 +72,7 @@ public static class ReferralEndpoints
             await db.SaveChangesAsync(cancellationToken);
             return Results.Created($"/referrals/{referral.Id}", referral);
         })
-        .WithName("CreateReferral")
+        .WithName("PostReferral")
         .WithSummary("Create a new referral.")
         .WithDescription("This POST method creates a new referral using the provided information. The request body must include the code from the referrer and referee first and last name. By default, the created referral has status 'Pending' but can be overridden if provided on the request body.")
         .Produces<Referral>(StatusCodes.Status201Created);
@@ -96,14 +96,14 @@ public static class ReferralEndpoints
 
             return Results.Accepted($"/referrals/{referral.Id}", referral);
         })
-        .WithName("UpdateReferralStatus")
+        .WithName("PatchReferralStatus")
         .WithSummary("Update the status of a referral by ID.")
         .WithDescription("This PATCH method updates the status of an existing referral specified by the referral ID in the path. The request body must include the new status as a string for the referral. If no existing referral is found, a 404 response is returned.")
         .Produces<Referral>(StatusCodes.Status202Accepted)
         .Produces(StatusCodes.Status404NotFound);
     }
 
-    private static void MapPutReferralEndpoint(this WebApplication app)
+    private static void MapPutReferralByIdEndpoint(this WebApplication app)
     {
         app.MapPut("/referrals/{id:guid}", async (ReferralDbContext db, Guid id, [FromBody] Referral referral, CancellationToken cancellationToken) =>
         {
@@ -133,7 +133,7 @@ public static class ReferralEndpoints
             await db.SaveChangesAsync(cancellationToken);
             return Results.Accepted($"/referrals/{referral.Id}", referral);
         })
-        .WithName("UpdateReferral")
+        .WithName("PutReferralById")
         .WithSummary("Create or update a referral by ID.")
         .WithDescription("This PUT method updates a referral specified by the referral ID in the path. The request body must include the full updated information for the referral. This operation will accept and override the existing referral with the new information. If no matching referral exists, it will be created with the provided information.")
         .Produces<Referral>(StatusCodes.Status201Created)

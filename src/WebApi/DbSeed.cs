@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CartonCaps.ReferralsApi.WebApi;
 
-public static class DbSeed
+internal static class DbSeed
 {
     private static readonly Guid JennyReferralGuid = Guid.Parse("01948986-41e1-7412-85c9-790850ef1d9e");
     private static readonly Guid JennyRefereeGuid = Guid.Parse("01948986-687c-7532-8f82-4b4c1134db3d");
@@ -17,7 +17,7 @@ public static class DbSeed
 
     private static readonly string ReferralCode = "XY7G4D";
 
-    public static void SeedMockData(this DbContext context)
+    internal static void SeedMockData(this DbContext context)
     {
         var jennyReferral = context.Set<Referral>().FirstOrDefault(r => JennyReferralGuid == r.Id);
 
@@ -80,7 +80,7 @@ public static class DbSeed
         }
     }
 
-    public static async Task SeedMockDataAsync(this DbContext context, CancellationToken cancellationToken)
+    internal static async Task SeedMockDataAsync(this DbContext context, CancellationToken cancellationToken)
     {
         var jennyReferral = await context.Set<Referral>().FirstOrDefaultAsync(r => JennyReferralGuid == r.Id, cancellationToken: cancellationToken);
 

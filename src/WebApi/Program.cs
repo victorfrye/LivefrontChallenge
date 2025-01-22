@@ -12,20 +12,18 @@ builder.AddSqlServerDbContext<ReferralDbContext>(connectionName: "db",
     configureSettings: static settings => settings.DisableRetry = true,
     configureDbContextOptions: static options =>
         options
-            .UseSeeding((context, _) => context.SeedMockData())
-            .UseAsyncSeeding(async (context, _, cancellationToken) => await context.SeedMockDataAsync(cancellationToken))
+            .UseSeeding(static (context, _) => context.SeedMockData())
+            .UseAsyncSeeding(static async (context, _, cancellationToken) => await context.SeedMockDataAsync(cancellationToken))
 );
 
-
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    .AddJsonOptions(static options =>
     {
         options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
         options.JsonSerializerOptions.AllowTrailingCommas = true;
     });
 
-
-builder.Services.AddOpenApi(options =>
+builder.Services.AddOpenApi(static options =>
 {
     options.AddDocumentTransformer(static (document, _, _) =>
     {

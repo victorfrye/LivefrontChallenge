@@ -1,0 +1,319 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Carton Caps Referrals API",
+    "description": "Web API for managing referrals.",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:52655"
+    },
+    {
+      "url": "http://localhost:52656"
+    }
+  ],
+  "paths": {
+    "/referrals": {
+      "get": {
+        "tags": [
+          "CartonCaps.ReferralsApi.WebApi"
+        ],
+        "summary": "Retrieve a collection of referrals.",
+        "description": "This GET method retrieves a collection of referrals based on query parameters. The 'code' parameter is required and filters referrals with the referrer's code. The 'status' parameter is optional and can be appended to filter referrals of a given status.",
+        "operationId": "GetReferrals",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Pending",
+                "Complete",
+                "Expired",
+                null
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CartonCaps.ReferralsApi.WebApi"
+        ],
+        "summary": "Create a new referral.",
+        "description": "This POST method creates a new referral using the provided information. The request body must include the code from the referrer and referee first and last name. By default, the created referral has status 'Pending' but can be overridden if provided on the request body.",
+        "operationId": "PostReferral",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Referral"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/referrals/{id}": {
+      "get": {
+        "tags": [
+          "CartonCaps.ReferralsApi.WebApi"
+        ],
+        "summary": "Retrieve a referral by ID.",
+        "description": "This GET method retrieves an existing referral specified by the referral ID in the path. If no existing referral is found, a 404 response is returned.",
+        "operationId": "GetReferralById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CartonCaps.ReferralsApi.WebApi"
+        ],
+        "summary": "Create or update a referral by ID.",
+        "description": "This PUT method updates a referral specified by the referral ID in the path. The request body must include the full updated information for the referral. This operation will accept and override the existing referral with the new information. If no matching referral exists, it will be created with the provided information.",
+        "operationId": "PutReferralById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Referral"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/referrals/{id}/status": {
+      "patch": {
+        "tags": [
+          "CartonCaps.ReferralsApi.WebApi"
+        ],
+        "summary": "Update the status of a referral by ID.",
+        "description": "This PATCH method updates the status of an existing referral specified by the referral ID in the path. The request body must include the new status as a string for the referral. If no existing referral is found, a 404 response is returned.",
+        "operationId": "PatchReferralStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferralStatus"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Referral"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Referee": {
+        "required": [
+          "firstName",
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier of the referee.",
+            "format": "uuid"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "The first, or given, name of the referee."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The last, or family, name of the referee."
+          },
+          "phone": {
+            "type": "string",
+            "description": "The phone number of the referee.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the referee.",
+            "nullable": true
+          }
+        }
+      },
+      "Referral": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The identifier of the referral.",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "description": "The code from the referrer used to initiate the referral."
+          },
+          "referee": {
+            "$ref": "#/components/schemas/Referee"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReferralStatus"
+          }
+        }
+      },
+      "ReferralStatus": {
+        "enum": [
+          "Pending",
+          "Complete",
+          "Expired"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "CartonCaps.ReferralsApi.WebApi"
+    }
+  ]
+}

@@ -15,7 +15,7 @@ GET {{WebApi_HostAddress}}/openapi/v1.json
 GET {{WebApi_HostAddress}}/referrals?code=XY7G4D
 Accept: application/json
 
-### Invalid create
+### Post bad referral
 POST {{WebApi_HostAddress}}/referrals
 Accept: application/json
 Content-Type: application/json
@@ -30,7 +30,7 @@ Content-Type: application/json
   }
 }
 
-### Create referral
+### Post Alex referral
 POST {{WebApi_HostAddress}}/referrals
 Accept: application/json
 Content-Type: application/json
@@ -53,7 +53,7 @@ Accept: application/json
 GET {{WebApi_HostAddress}}/referrals?code=XY7G4D&status=Pending
 Accept: application/json
 
-### Complete Helen referral
+### Patch Helen referral as complete
 PATCH {{WebApi_HostAddress}}/referrals/01948987-0ddc-7591-9750-74604d5b3c28/status
 Accept: application/json
 Content-Type: application/json
@@ -64,7 +64,7 @@ Content-Type: application/json
 GET {{WebApi_HostAddress}}/referrals/01948987-0ddc-7591-9750-74604d5b3c28
 Accept: application/json
 
-### Put invalid referral
+### Put bad referral
 PUT {{WebApi_HostAddress}}/referrals/01948987-424d-7f68-b1d5-9c43a2541e9a
 Accept: application/json
 Content-Type: application/json

@@ -23,36 +23,11 @@ My solution for this challenge includes:
     - [.NET Aspire](#net-aspire)
     - [HTTPS](#https)
     - [Run the app](#run-the-app)
+    - [Seed data](#seed-data)
 - [API Specification](#api-specification)
     - [Endpoints](#endpoints)
     - [Scenario considerations](#scenario-considerations)
 - [Helpful Links](#helpful-links)
-
-## To Do List
-
-- [x] Create repository
-- [x] Create referrals models
-- [x] Create EFCore database context
-- [x] Create Aspire app host
-- [x] Create Aspire service defaults
-- [x] Create retrieve list endpoint
-- [x] Create retrieve single endpoint
-- [x] Create create endpoint
-- [x] Create update status endpoint
-- [x] Add OpenAPI documentation
-    - [x] Add documentation base information
-    - [x] Add operation response types
-    - [x] Add operation summaries
-    - [x] Add operation descriptions
-    - [x] Add model field descriptions
-- [ ] Add unit tests
-- [x] Add format workflow to pipeline
-- [x] Add build workflow to pipeline
-- [x] Add test workflow to pipeline
-- [x] Add README documentation
-    - [x] Write API Specification details
-    - [x] Write how to run details
-- [ ] Remove this list when complete
 
 ## ✅ Get Started
 
@@ -95,7 +70,7 @@ This will start the database and application. You will find the following compon
 
 ### Seed data
 
-The application will seed mock data on startup to allow getting started without creating any.
+The application will seed mock data on startup to allow getting started without creating any. The SQL Server container lifetime is limited to the session and will reset when restarted.
 
 These three referrals will be created and can be retrieved by calling the `GET /referrals` endpoint with code query parameter `XY7G4D`.
 
@@ -150,7 +125,7 @@ The following endpoints are available in this API:
 
 Additional endpoints related to service operations are also included but not referenced in the actual API specification.
 
-- `GET /openapi/v1.json`: Retrieve the OpenAPI specification document.
+- `GET /openapi/v1.json`: Retrieve the OpenAPI document.
 - `GET /health`: Retrieve the health status of the application.
 - `GET /alive`: Retrieve the liveness status of the application.
 
@@ -200,6 +175,6 @@ Given the vast myriad of ways to handle this, no specific implementation is incl
 
 ## Helpful Links
 
-- [Referrals API Document](./docs/openapi.json)
+- [Referrals OpenAPI Document](./docs/openapi.json)
 - [.NET Aspire documentation](https://learn.microsoft.com/en-us/dotnet/aspire/get-started/aspire-overview)
 - [Example Requests](./src/WebApi/Examples.http)
